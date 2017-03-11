@@ -1,0 +1,28 @@
+﻿@using Vidly.Models
+@model Vidly.ViewModels.RandomMovieViewModel
+@{
+    ViewBag.Title = "Random";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*if you have the viewData then youo have to change this if you make any changes to the controller data*@
+@*<h2>@( ((Movie) ViewData["Movie"]).Name )</h2>*@
+
+@{ 
+    //render this class as dynamic
+    // this way you can use this way to render many other attributes dynamic
+    var className = Model.Customers.Count > 5 ? "popular" : null;
+}
+<h2 class="@className">@Model.Movie.Name</h2>
+
+@if (Model.Customers.Count == 0)
+{
+    <text>No one has rented this movie before.</text>
+}
+
+<ul>
+    @foreach (var customer in Model.Customers)
+    {
+        <li>@customer.Name</li>
+    }
+</ul>
