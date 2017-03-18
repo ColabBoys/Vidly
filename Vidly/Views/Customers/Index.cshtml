@@ -39,9 +39,8 @@ else
     <script>
         // this is js section to handle the delete function in the page
         $(document).ready(function () {
-            // call the below to have the table look like data tables formatted in bootstrap like css
-            $("#customers").DataTable();
-
+            // the old way there would be a delete function in memory PER customer row (slow) and inefficient but this way there is only one stack for delete
+            // all delete stack hooked to the #customers selector
             $("#customers").on("click", ".js-delete", function () {
                 var button = $(this);
                 
