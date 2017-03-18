@@ -24,7 +24,8 @@
         // add the retrieving the data from the json API instead of from the dome objects cus the DataTables basically has to parse the data
         // and then convert it to JSON and then display for each action so massive waste if this is going to have 100+ records
         // data source below is not set to "customers" because our API returns an array of objects not types so set it to empty string
-        $("#customers").DataTable({
+        // with the old code if the customer had a special char like a + or - then they would get deleted but you can still search for them so we are using native DataTable methods to clear this from the dom by putting the result into a variabla and calling the draw function to remove
+        var table = $("#customers").DataTable({
             ajax: {
                 url: "/api/customers",
                 dataSrc: ""
@@ -49,6 +50,7 @@
             ]
         });
         // this is js section to handle the delete function in the page
+        // row remove and draw are part of the DataTable methods read api for more details
         $(document).ready(function () {
             // the old way there would be a delete function in memory PER customer row (slow) and inefficient but this way there is only one stack for delete
             // all delete stack hooked to the #customers selector
@@ -62,8 +64,7 @@
                             url: "/api/customers/" + button.attr("data-customer-id"),
                             method: "DELETE",
                             success: function () {
-                                console.log("Delete Success");
-                                button.parents("tr").remove();
+                                table.row(button.parents("tr")).remove().draw();                                
                             }
                         });
                     }
