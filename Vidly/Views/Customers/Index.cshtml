@@ -5,40 +5,49 @@
     }
 
 <h2>Customers</h2>
-@if (!Model.Any())
-{
-    <p>We don't have any customers yet.</p>
-}
-else
-{
-    <table id="customers" class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Customer</th>
-                <th>Membership Type</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var customer in Model)
-            {
-                <tr>
-                    <td>@Html.ActionLink(customer.Name, "Edit", "Customers", new { id = customer.Id }, null)</td>
-                    <td>@customer.MembershipType.Name</td>
-                    <td>
-                        <!--give this js- prefix to indicate for js stuff-->
-                        <button data-customer-id="@customer.Id" class="btn-link js-delete">Delete</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<table id="customers" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Membership Type</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @*can get rid of for each block here since we are using api to render the customer, and the below was to render from the server*@
+    </tbody>
+</table>
 @section scripts
 {
     <script>
         // change the format to a data table that has built in search ordering, pagination and looks like the bootstrap css
-        $("#customers").DataTable();
+        // add the retrieving the data from the json API instead of from the dome objects cus the DataTables basically has to parse the data
+        // and then convert it to JSON and then display for each action so massive waste if this is going to have 100+ records
+        // data source below is not set to "customers" because our API returns an array of objects not types so set it to empty string
+        $("#customers").DataTable({
+            ajax: {
+                url: "/api/customers",
+                dataSrc: ""
+            },
+            columns: [
+                {
+                    data: "name",
+                    render: function (data, type, customer) {
+                        return "<a href='/customers/edit/" + customer.id + "'>" + customer.name + "</a>";
+                    }
+                },
+                {
+                    data: "name"
+                },
+                {
+                    data: "id",
+                    render: function (data) {
+                        return "<button class='btn-link js-delete' data-customer-id=" + data + ">Delete</button>";
+                    }
+                }
+
+            ]
+        });
         // this is js section to handle the delete function in the page
         $(document).ready(function () {
             // the old way there would be a delete function in memory PER customer row (slow) and inefficient but this way there is only one stack for delete

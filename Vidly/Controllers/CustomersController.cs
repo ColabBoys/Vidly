@@ -111,9 +111,11 @@ namespace Vidly.Controllers
         {
             //deferred execution, so itll only execute the query when it iterates through the customer
             //if you want to immediately execute add .ToList at end of customers
-            var customers = _context.Customers.Include(c => c.MembershipType).ToList();
+            // since we are using the api directly in the view we dont need the list of customers from the server here so just return empty view
+            //var customers = _context.Customers.Include(c => c.MembershipType).ToList();
 
-            return View(customers);
+            //return View(customers);
+            return View();
         }
 
         public ActionResult Details (int id)
