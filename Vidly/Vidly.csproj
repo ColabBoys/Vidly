@@ -261,6 +261,10 @@
     <Compile Include="Migrations\201702270034406_customerValidation.Designer.cs">
       <DependentUpon>201702270034406_customerValidation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703181921021_addingCustomers.cs" />
+    <Compile Include="Migrations\201703181921021_addingCustomers.Designer.cs">
+      <DependentUpon>201703181921021_addingCustomers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Customer.cs" />
@@ -284,6 +288,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootbox.js" />
+    <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -400,6 +406,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702270034406_customerValidation.resx">
       <DependentUpon>201702270034406_customerValidation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703181921021_addingCustomers.resx">
+      <DependentUpon>201703181921021_addingCustomers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
