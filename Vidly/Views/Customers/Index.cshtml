@@ -37,6 +37,8 @@ else
 @section scripts
 {
     <script>
+        // change the format to a data table that has built in search ordering, pagination and looks like the bootstrap css
+        $("#customers").DataTable();
         // this is js section to handle the delete function in the page
         $(document).ready(function () {
             // the old way there would be a delete function in memory PER customer row (slow) and inefficient but this way there is only one stack for delete
