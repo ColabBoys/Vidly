@@ -46,6 +46,24 @@ namespace Vidly.Controllers.Api
             return Ok(Mapper.Map<Customer, CustomerDto>(customer));
         }
 
+        /*
+        // Brian's suggestiion getting customer based off their name/username instead of Id can be used later on if admin wants to search
+        // a customer by their name quickly (assuming name/username is unique)
+        // GET /api/customers/name={username}
+        [Route("api/customers/name={username}")]
+        public IHttpActionResult GetCustomerByName(string username)
+        {
+            var customer = _context.Customers.SingleOrDefault(c => c.Name == username);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(Mapper.Map<Customer, CustomerDto>(customer));
+
+        } */
+
         // POST /api/customers
         // this action will only be performed if created an http post request
         // if you call the action PostCustomer instead of Create then you will not need the httppost Data annotation
@@ -114,5 +132,6 @@ namespace Vidly.Controllers.Api
 
             return Ok();
         }
+
     }
 }
