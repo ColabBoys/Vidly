@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Customers";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+}
 
 <h2>Customers</h2>
 <table id="customers" class="table table-bordered table-hover">
@@ -25,46 +25,46 @@
         // and then convert it to JSON and then display for each action so massive waste if this is going to have 100+ records
         // data source below is not set to "customers" because our API returns an array of objects not types so set it to empty string
         // with the old code if the customer had a special char like a + or - then they would get deleted but you can still search for them so we are using native DataTable methods to clear this from the dom by putting the result into a variabla and calling the draw function to remove
-        var table = $("#customers").DataTable({
-            ajax: {
-                url: "/api/customers",
-                dataSrc: ""
-            },
-            columns: [
-                {
-                    data: "name",
-                    render: function (data, type, customer) {
-                        return "<a href='/customers/edit/" + customer.id + "'>" + customer.name + "</a>";
-                    }
-                },
-                {
-                    data: "membershipType.name"
-                },
-                {
-                    data: "id",
-                    render: function (data) {
-                        return "<button class='btn-link js-delete' data-customer-id=" + data + ">Delete</button>";
-                    }
-                }
-
-            ]
-        });
-        // this is js section to handle the delete function in the page
-        // row remove and draw are part of the DataTable methods read api for more details
         $(document).ready(function () {
+            var table = $("#customers").DataTable({
+                ajax: {
+                    url: "/api/customers",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name",
+                        render: function (data, type, customer) {
+                            return "<a href='/customers/edit/" + customer.id + "'>" + customer.name + "</a>";
+                        }
+                    },
+                    {
+                        data: "membershipType.name"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-customer-id=" + data + ">Delete</button>";
+                        }
+                    }
+
+                ]
+            });
+            // this is js section to handle the delete function in the page
+            // row remove and draw are part of the DataTable methods read api for more details
+
             // the old way there would be a delete function in memory PER customer row (slow) and inefficient but this way there is only one stack for delete
             // all delete stack hooked to the #customers selector
             $("#customers").on("click", ".js-delete", function () {
                 var button = $(this);
-                
+
                 bootbox.confirm("Are you sure you would like to delete this customer?", function (result) {
-                    if (result)
-                    {
+                    if (result) {
                         $.ajax({
                             url: "/api/customers/" + button.attr("data-customer-id"),
                             method: "DELETE",
                             success: function () {
-                                table.row(button.parents("tr")).remove().draw();                                
+                                table.row(button.parents("tr")).remove().draw();
                             }
                         });
                     }

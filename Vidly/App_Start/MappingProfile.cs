@@ -20,6 +20,7 @@ namespace Vidly.App_Start
             Mapper.CreateMap<Movie, MovieDto>();
             // api data req for membership type
             Mapper.CreateMap<MembershipType, MembershipTypeDto>();
+            Mapper.CreateMap<Genre, GenreDto>();
 
             //dto to domain
             Mapper.CreateMap<CustomerDto, Customer>()

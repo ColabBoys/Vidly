@@ -1,26 +1,29 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using Vidly.Models;
 using Vidly.Dtos;
-using AutoMapper;
+using Vidly.Models;
 
 namespace Vidly.Controllers.Api
 {
     public class MoviesController : ApiController
     {
         private ApplicationDbContext _context;
+
         public MoviesController()
         {
             _context = new ApplicationDbContext();
         }
 
-        public IEnumerable<MovieDto> GetMovies(int id)
+        public IEnumerable<MovieDto> GetMovies()
         {
-            return _context.Movies.ToList().Select(Mapper.Map<Movie, MovieDto>);
+            return _context.Movies
+                .Include(m => m.Genre)
+                .ToList()
+                .Select(Mapper.Map<Movie, MovieDto>);
         }
 
         public IHttpActionResult GetMovie(int id)
@@ -31,13 +34,12 @@ namespace Vidly.Controllers.Api
                 return NotFound();
 
             return Ok(Mapper.Map<Movie, MovieDto>(movie));
-
         }
 
         [HttpPost]
-        public IHttpActionResult CreateMovie (MovieDto movieDto)
+        public IHttpActionResult CreateMovie(MovieDto movieDto)
         {
-            if (movieDto == null)
+            if (!ModelState.IsValid)
                 return BadRequest();
 
             var movie = Mapper.Map<MovieDto, Movie>(movieDto);
@@ -45,7 +47,7 @@ namespace Vidly.Controllers.Api
             _context.SaveChanges();
 
             movieDto.Id = movie.Id;
-            return Created(new Uri(Request.RequestUri + "/" + movie.Id),movieDto);
+            return Created(new Uri(Request.RequestUri + "/" + movie.Id), movieDto);
         }
 
         [HttpPut]
@@ -67,7 +69,7 @@ namespace Vidly.Controllers.Api
         }
 
         [HttpDelete]
-        public IHttpActionResult DeleteMovie (int id)
+        public IHttpActionResult DeleteMovie(int id)
         {
             var movieInDb = _context.Movies.SingleOrDefault(c => c.Id == id);
 
