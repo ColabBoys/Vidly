@@ -26,10 +26,18 @@ namespace Vidly.Controllers
         }
         
         public ViewResult Index()
-        {            
-            return View();
+        {
+            // if user role is can manage movies then they can access adding a new movie if not then direct them to log in
+            // role name is pulled in from the RoleName class in models
+            // if you need to rename it then do it there but will/may need to update the role in dbs as well
+            if (User.IsInRole(RoleName.CanManageMovies))
+                return View("List");
+
+            return View("ReadOnlyList");
         }
 
+        // can pass multiple roles separated by comma
+        [Authorize(Roles = RoleName.CanManageMovies)]
         public ViewResult New()
         {
             var genres = _context.Genres.ToList();
