@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Vidly.Models;
 using Vidly.ViewModels;
@@ -115,6 +113,18 @@ namespace Vidly.Controllers
             //var customers = _context.Customers.Include(c => c.MembershipType).ToList();
 
             //return View(customers);
+
+            //caching the list of genres and all the subsequent requests we will get this data from the cache
+            // to limit the database functions and optimize performance
+            // .Default is like a dictionary so in this case we are storing and looking for a definition calld Generes
+            /* if(MemoryCache.Default["Genres"] == null)
+            {
+                MemoryCache.Default["Genres"] = _context.Genres.ToList();
+            }
+            //else
+            var genres = MemoryCache.Default["Genres"] as IEnumerable<Genre>;
+            */
+
             return View();
         }
 
