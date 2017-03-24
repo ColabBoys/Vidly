@@ -24,7 +24,7 @@ namespace Vidly.Controllers.Api
 
         //return a list of customers from db
         // GET /api/customers
-        public IHttpActionResult GetCustomers()
+        public IHttpActionResult GetCustomers(string query = null)
         {
 
             // remove the () because we are not calling the method if we call it it executes we need to delegate a reference to the method
@@ -32,8 +32,15 @@ namespace Vidly.Controllers.Api
 
             // bc we are getting the api to give us the data for the view we need to include membership type
             // add the using Data.entity thing above and add include the membership type below after customers
-            var customerDtos = _context.Customers
-                .Include(c => c.MembershipType)
+            var customersQuery = _context.Customers
+                .Include(c => c.MembershipType);
+
+            // this so that when the customer starts typing it will only give them the name or movie containing the letters typed
+            // also the query parameter is what the front end is going to ask this method to get
+            if (!String.IsNullOrWhiteSpace(query))
+                customersQuery = customersQuery.Where(c => c.Name.Contains(query));
+
+            var customerDtos = customersQuery
                 .ToList()
                 .Select(Mapper.Map<Customer, CustomerDto>);
 
