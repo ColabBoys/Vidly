@@ -9,14 +9,14 @@
     <div class="form-group">
         <label>Customer</label>
         <div class="tt-container">
-            <input id="customer" type="text" value="" class="form-control" />
+            <input id="customer" name="customer" data-rule-validCustomer="true" required type="text" value="" class="form-control" />
         </div>
     </div>
 
     <div class="form-group">
         <label>Movie</label>
         <div class="tt-container">
-            <input id="movie" type="text" value="" class="form-control" />
+            <input id="movie" name="movie" data-rule-atLeastOneMovie="true" type="text" value="" class="form-control" />
         </div>
     </div>
 
@@ -30,6 +30,7 @@
 </form>
 @section scripts
 {
+    @Scripts.Render("~/bundles/jqueryval")
     <script>
         $(document).ready(function () {
             // client view model
@@ -87,22 +88,49 @@
                 vm.movieIds.push(movie.id);
             });
 
-            $("#newRental").submit(function (e) {
-                e.preventDefault(); // this will prevent the form from submitting normally as a traditional html form instead of ajax
+            // simple jquery validation
+            // trigger this by adding the data-rule-functionName = "true" to the input - Adding Data Attribute
+            //jquery looks for any attribute starting with data-rule-.. to apply this to
+            $.validator.addMethod("validCustomer", function () {
+                return vm.customerId && vm.customerId !== 0;
+            }, "Please select a valid Customer");
 
-                $.ajax({
-                    url: "/api/NewRentals",
-                    method: "post",
-                    data: vm
-                })
-                .done(function () {
-                    //System.Diagnostics.Debug.WriteLine();
-                    console.log("done");
-                })
-                .fail(function () {
+            $.validator.addMethod("atLeastOneMovie", function () {
+                return vm.movieIds.length > 0;
+            }, "Please select at least 1 Movie");
 
-                });
-            })
+            // this plugs in validation for this form
+            // submitHandler will only post the form if it is validated no empty entries
+            var validator = $("#newRental").validate({
+                submitHandler: function () {
+                    //e.preventDefault(); // this will prevent the form from submitting normally as a traditional html form instead of ajax
+
+                    $.ajax({
+                        url: "/api/NewRentals",
+                        method: "post",
+                        data: vm
+                    })
+                    .done(function () {
+                        //System.Diagnostics.Debug.WriteLine();
+                        console.log("done");
+                        toastr.success("Rentals Successfully Recorded");
+
+                        // upon success clear the form
+                        $("#customer").typeahead("val", "");
+                        $("#movie").typeahead("val", "");
+                        $("#movies").empty();
+
+                        vm = { movieIds: [] };
+                        // reset the form interms of its validation to prevent double submit and stuff
+                        validator.resetForm();
+                    })
+                    .fail(function () {
+                        toastr.error("Something went wrong :(");
+                    });
+                    // this is here because the jquery function isnt passed the e from above its passed a reference to the form so it will bug out.  So this is the alternate method to prevent normal submitting
+                    return false;
+                }
+            });        
         });
     </script>
 }
