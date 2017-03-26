@@ -18,6 +18,8 @@ namespace Vidly.Models
         [StringLength(50)]
         public string Phone { get; set; }
 
+        public byte[] UserPhoto { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -29,6 +31,6 @@ namespace Vidly.Models
 
     //public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     //{
-        
+
     //}
 }

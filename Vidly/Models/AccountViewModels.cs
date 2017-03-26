@@ -72,6 +72,9 @@ namespace Vidly.Models
 
     public class RegisterViewModel
     {
+        [Display(Name = "Profile Picture")]
+        public byte[] UserPhoto { get; set; }
+
         [Required]
         [Display(Name = "Driving License")]
         public string DrivingLicense { get; set; }
